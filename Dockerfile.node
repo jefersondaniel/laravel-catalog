@@ -1,0 +1,6 @@
+FROM node:alpine
+COPY . /code
+WORKDIR /code
+RUN chown -R node:node .
+USER node
+RUN npm install

@@ -1,0 +1,57 @@
+version: '2'
+services:
+  app:
+    build: .
+    command: ./docker-entrypoint.sh
+    volumes:
+      - .:/code
+      - vendor:/code/vendor
+    ports:
+      - 8000:8000
+    env_file: .env.example
+    links:
+      - db
+      - redis
+      - echo-server
+
+  queue:
+    build: .
+    command: php artisan queue:work --tries=3
+    volumes:
+      - .:/code
+      - vendor:/code/vendor
+    env_file: .env.example
+    links:
+      - db
+      - redis
+      - echo-server
+
+  echo-server:
+    image: jefersondaniel/laravel-echo-server
+    volumes:
+      - .:/app
+    ports:
+      - 6001:6001
+    links:
+      - redis
+
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    command: npm run watch
+    volumes:
+      - .:/code
+      - node_modules:/code/node_modules
+
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=catalog
+      - MYSQL_ROOT_PASSWORD=secret
+
+  redis:
+    image: redis:3.0
+volumes:
+  vendor: {}
+  node_modules: {}
