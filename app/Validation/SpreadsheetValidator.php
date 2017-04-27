@@ -20,7 +20,7 @@ class SpreadsheetValidator
      */
     public function __construct(SpreadsheetReaderService $spreadsheetReaderService)
     {
-        $this->spreadsheetReaderService = new SpreadsheetReaderService;
+        $this->spreadsheetReaderService = $spreadsheetReaderService;
     }
 
     /**
@@ -32,7 +32,7 @@ class SpreadsheetValidator
      */
     public function validate($attribute, $value)
     {
-        if ($value instanceof UploadedFile && ! $value->isValid()) {
+        if (! $value instanceof UploadedFile || ! $value->isValid()) {
             return false;
         }
 

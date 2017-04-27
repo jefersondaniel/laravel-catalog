@@ -26,9 +26,13 @@ $ docker-compose exec app bash
 You can run browser tests with:
 
 ```
-$ ./run-dusk.sh
+$ make phpunit
 ```
 
 ```
-$ ./run-phpunit.sh
+$ make coverage
+```
+
+```
+$ make dusk
 ```

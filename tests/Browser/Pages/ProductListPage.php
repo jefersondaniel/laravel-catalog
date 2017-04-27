@@ -4,7 +4,7 @@ namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Page;
 
-class IndexPage extends Page
+class ProductListPage extends Page
 {
     /**
      * Get the URL for the page.

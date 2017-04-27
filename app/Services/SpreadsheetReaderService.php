@@ -20,7 +20,7 @@ class SpreadsheetReaderService
         ];
         $valid = false;
         foreach ($supportedTypes as $type) {
-            $reader = PHPExcel_IOFactory::createReader($type);
+            $reader = $this->createReader($type);
             if ($reader && $reader->canRead($filename)) {
                 $valid = true;
                 break;
@@ -38,7 +38,7 @@ class SpreadsheetReaderService
      */
     public function readRows($filename, array $columnNames)
     {
-        $excel = PHPExcel_IOFactory::load($filename);
+        $excel = $this->load($filename);
         $sheet = $excel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
@@ -70,6 +70,28 @@ class SpreadsheetReaderService
     protected function isHeaderRow(array $rowData, array $columnNames)
     {
         $foundNames = array_filter($rowData[0]);
-        return count(array_diff($foundNames, $columnNames)) === 0;
+        return count($foundNames) && count(array_diff($foundNames, $columnNames)) === 0;
+    }
+
+    /**
+     * Create reader
+     *
+     * @param string $type
+     * @return PHPExcel_Reader_IReader
+     */
+    protected function createReader($type)
+    {
+        return PHPExcel_IOFactory::createReader($type);
+    }
+
+    /**
+     * Load spreadsheet file
+     *
+     * @param string $filename
+     * @return PHPExcel
+     */
+    protected function load($filename)
+    {
+        return PHPExcel_IOFactory::load($filename);
     }
 }
